@@ -1,9 +1,9 @@
 # network education repo
 ## Scapy 
 Scapy - python based module \
-simple example [scapy_test.py](scapy_test.py)
+simple example [scapy_test.py](scspy_py/scapy_test.py)
 ```bash
-rustam@rustam-ZenBook:~/IP_edu$ sudo python3 scapy_test.py 
+rustam@rustam-ZenBook:~/IP_edu/scapy_py$ sudo python3 scapy_test.py 
 Begin emission:
 Finished sending 1 packets.
 *
