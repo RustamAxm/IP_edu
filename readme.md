@@ -2,7 +2,7 @@
 ## Scapy 
 Scapy - python based module \
 simple example [scapy_test.py](scapy_test.py)
-```commandline
+```bash
 rustam@rustam-ZenBook:~/IP_edu$ sudo python3 scapy_test.py 
 Begin emission:
 Finished sending 1 packets.

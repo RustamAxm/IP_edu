@@ -1,7 +1,8 @@
 import socket
-from scapy.all import srp, sr
-from scapy.layers.inet import IP, TCP
+from scapy.all import srp, sr, raw, sniff, hexdump
+from scapy.layers.inet import IP, TCP, UDP
 from scapy.layers.l2 import Ether, ARP
+from scapy.packet import Raw
 
 
 def arp_scan(ip):
@@ -32,6 +33,33 @@ def tcp_scan(ip, ports):
 
     return result
 
+
+def sniffer():
+    packets = sniff(count=10)
+    packets.nsummary()
+
+
+def raw_show():
+    while True:
+        packets = sniff(count=1)
+        for x_ in packets:
+            print(x_.show())
+
+            print(x_.layers())
+            print(x_.fields)
+            if IP in x_.layers():
+                print(x_[IP].fields)
+
+            if TCP in x_.layers():
+                print(x_[TCP].fields)
+                print(x_[TCP])
+            elif UDP in x_.layers():
+                print(x_[UDP].fields)
+
+            if Raw in x_.layers():
+                print(x_[Raw].fields)
+                exit(0)
+
 print(arp_scan('192.168.50.1'))
 print(tcp_scan(ip='192.168.50.1', ports=(1, 1024)))
-
+raw_show()
