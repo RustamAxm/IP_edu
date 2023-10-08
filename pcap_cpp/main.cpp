@@ -154,7 +154,7 @@ int main(int argc, char* argv[])
 	dev->startCapture(onPacketArrives, &stats);
 
 	// sleep for 10 seconds in main thread, in the meantime packets are captured in the async thread
-	pcpp::multiPlatformSleep(10);
+	pcpp::multiPlatformSleep(2);
 
 	// stop capturing packets
 	dev->stopCapture();
@@ -185,11 +185,11 @@ int main(int argc, char* argv[])
 	dev->stopCapture();
 
 	// go over the packet vector and feed all packets to the stats object
-	for (pcpp::RawPacketVector::ConstVectorIterator iter = packetVec.begin(); iter != packetVec.end(); iter++)
+	for (auto x : packetVec)
 	{
 		// parse raw packet
-		pcpp::Packet parsedPacket(*iter);
-
+		pcpp::Packet parsedPacket(x);
+        std::cout << parsedPacket << std::endl;
 		// feed packet to the stats object
 		stats.consumePacket(parsedPacket);
 	}
@@ -225,10 +225,10 @@ int main(int argc, char* argv[])
 	std::cout << std::endl << "Sending " << packetVec.size() << " packets one by one..." << std::endl;
 
 	// go over the vector of packets and send them one by one
-	for (pcpp::RawPacketVector::ConstVectorIterator iter = packetVec.begin(); iter != packetVec.end(); iter++)
+	for (auto iter : packetVec)
 	{
 		// send the packet. If fails exit the application
-		if (!dev->sendPacket(**iter))
+		if (!dev->sendPacket(*iter))
 		{
 			std::cerr << "Couldn't send packet" << std::endl;
 			return 1;
