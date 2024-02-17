@@ -1,9 +1,9 @@
 # network education repo
-## Scapy 
+## Scapy
 Scapy - python based module \
 simple example [scapy_test.py](scspy_py/scapy_test.py)
 ```bash
-rustam@rustam-ZenBook:~/IP_edu/scapy_py$ sudo python3 scapy_test.py 
+rustam@rustam-ZenBook:~/IP_edu/scapy_py$ sudo python3 scapy_test.py
 Begin emission:
 Finished sending 1 packets.
 *
@@ -28,10 +28,10 @@ std::string interfaceIPAddr = "192.168.50.146";
 ```
 run with sudo permission
 ```bash
-rustam@rustam-ZenBook:~/IP_edu/pcap_cpp$ sudo ./cmake-build-debug/pcap_cpp  
+rustam@rustam-ZenBook:~/IP_edu/pcap_cpp$ sudo ./cmake-build-debug/pcap_cpp
 Interface info:
    Interface name:        wlp1s0
-   Interface description: 
+   Interface description:
    MAC address:           5c:80:b6:f7:a4:63
    Default gateway:       192.168.50.1
    Interface MTU:         1500
