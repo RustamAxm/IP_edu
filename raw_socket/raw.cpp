@@ -17,7 +17,11 @@ public:
             perror("Failed to create socket");
             exit(1);
         }
-        buffer = (unsigned char *)malloc(65536);
+        buffer = new unsigned char [65536]();
+    }
+
+    virtual ~ RawSocket() {
+        delete buffer;
     }
 
     struct iphdr & getPacket () {
@@ -66,7 +70,7 @@ private:
 int main() {
     // Structs that contain source IP addresse
     RawSocket raw = RawSocket();
-    while (true) {
+    for (auto i = 0; i < 10; i++) {
         raw.printStr();
     }
     return 0;
