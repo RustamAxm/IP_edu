@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "multicast-sender"
+version = "0.1.0"
+description = ""
+authors = ["Rustam Akhmadullin <rustamaxm@gmail.com>"]
+readme = "README.md"
+packages = [{include = "multicast_sender"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+loguru = "^0.7.2"
+
+[tool.poetry.scripts]
+client = 'multicast_sender.client:main'
+server = 'multicast_sender.server:main'
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
