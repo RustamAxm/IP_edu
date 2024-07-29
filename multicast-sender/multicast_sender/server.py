@@ -2,6 +2,7 @@ import socket
 import struct
 from datetime import datetime
 from loguru import logger
+from io import BytesIO
 
 def main():
     MCAST_GRP = '224.1.1.1'
@@ -17,16 +18,34 @@ def main():
     mreq = struct.pack("4sl", socket.inet_aton(MCAST_GRP), socket.INADDR_ANY)
 
     sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
-    buffer = b''
+    sock.settimeout(1)
+    buffer = BytesIO()
+    buffer_size = 0
     while True:
-        tmp = sock.recv(1024)
-        buffer += tmp
-        logger.debug(f'{len(tmp)=}, {len(buffer)=}')
-        if len(tmp) < 1024:
+        try:
+            tmp = sock.recv(1024)
+        except Exception as ex:
+            logger.error(f'timeout error {ex} {ex.args}')
+            continue
+        try:
+            header = tmp.decode('utf-8').split(':')
+        except Exception as ex:
+            logger.error(f'timeout error {ex} {ex.args}')
+            continue
+
+        if 'start_data' in header:
+            count = int(header[1])
+            while buffer_size != count:
+                data = sock.recv(1024)
+                buffer.write(data)
+                buffer_size = buffer.getbuffer().nbytes
+                logger.info(f'received {buffer_size=}')
+
             name_to_save = f'data_{datetime.now().strftime("%d%m%y_%H_%M_%S")}.bin'
             with open(name_to_save, 'wb') as file:
-                file.write(buffer)
+                file.write(buffer.getvalue())
                 logger.info(f'{name_to_save} saved!')
+                buffer = BytesIO()
 
 
 if __name__ == '__main__':
