@@ -1,8 +1,12 @@
 import socket
 import struct
 from datetime import datetime
+
+import numpy as np
 from loguru import logger
 from io import BytesIO
+from multicast_sender.header import header
+
 
 def main():
     MCAST_GRP = '224.1.1.1'
@@ -23,24 +27,21 @@ def main():
     buffer_size = 0
     while True:
         try:
-            tmp = sock.recv(1024)
+            tmp = sock.recv(2048)
         except Exception as ex:
             logger.error(f'timeout error {ex} {ex.args}')
             continue
         try:
-            header = tmp.decode('utf-8').split(':')
+            header_ = np.frombuffer(tmp, dtype=header, count=1)
         except Exception as ex:
-            logger.error(f'timeout error {ex} {ex.args}')
+            logger.error(f'decode error {ex} {ex.args}')
             continue
 
-        if 'start_data' in header:
-            count = int(header[1])
-            while buffer_size != count:
-                data = sock.recv(1024)
-                buffer.write(data)
-                buffer_size = buffer.getbuffer().nbytes
-                logger.info(f'received {buffer_size=}')
+        buffer.write(tmp[header_.itemsize::])
+        buffer_size = buffer.getbuffer().nbytes
+        logger.info(f'received {buffer_size=} ')
 
+        if buffer_size == header_['size']:
             name_to_save = f'data_{datetime.now().strftime("%d%m%y_%H_%M_%S")}.bin'
             with open(name_to_save, 'wb') as file:
                 file.write(buffer.getvalue())
