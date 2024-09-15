@@ -10,10 +10,14 @@ def main():
     sdr.gain = 'auto'
     sdr.sample_rate = 2.4e6 # Hz
 
-    fft_size = 4096
+    fft_size = 512
     spectrogram = np.array([])
     x_plots = np.array([])
-    center_freqs = np.arange(80e6, 120e6, sdr.sample_rate)
+    center_freqs = np.arange(90e6, 200e6, sdr.sample_rate)
+    print(center_freqs)
+    sdr.center_freq = center_freqs[0]
+    for _ in range(5): # dummy wait
+        x = sdr.read_samples(fft_size)
 
     for center in center_freqs:
         sdr.center_freq = center  # Hz
