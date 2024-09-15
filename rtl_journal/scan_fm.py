@@ -1,7 +1,9 @@
+from astropy.units.quantity_helper.function_helpers import piecewise
 from rtlsdr import RtlSdr
 import numpy as np
 import matplotlib.pyplot as plt
-
+from scipy.ndimage import uniform_filter1d
+from scipy.signal import find_peaks
 
 def main():
     sdr = RtlSdr()
@@ -14,7 +16,6 @@ def main():
     spectrogram = np.array([])
     x_plots = np.array([])
     center_freqs = np.arange(90e6, 200e6, sdr.sample_rate)
-    print(center_freqs)
     sdr.center_freq = center_freqs[0]
     for _ in range(5): # dummy wait
         x = sdr.read_samples(fft_size)
@@ -28,8 +29,16 @@ def main():
         spectrogram = np.concatenate((spectrogram, spectrogram_), axis=None)
         x_plots = np.concatenate((x_plots, x_plots_), axis=None)
 
+    filtered = uniform_filter1d(spectrogram, size=30)
+    peaks, _ = find_peaks(filtered, height=20, distance=50)
+
+    print(f'{x_plots[peaks]=}')
     plt.figure()
     plt.plot(x_plots, spectrogram)
+    plt.plot(x_plots, filtered)
+    plt.plot(
+        x_plots[peaks],
+        filtered[peaks], "x", color="r")
     plt.xlabel("Frequency [MHz]")
     plt.ylabel("intensity")
     plt.show()

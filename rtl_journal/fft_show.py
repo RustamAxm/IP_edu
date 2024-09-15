@@ -1,6 +1,9 @@
+from progress.colors import color
 from rtlsdr import RtlSdr
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.ndimage import uniform_filter1d
+from scipy.signal import find_peaks
 
 
 def main():
@@ -19,13 +22,27 @@ def main():
     extent = [(sdr.center_freq + sdr.sample_rate/-2)/1e6,
                 (sdr.center_freq + sdr.sample_rate/2)/1e6,
                 len(x)/sdr.sample_rate, 0]
+
+    filtered = uniform_filter1d(spectrogram[200, :], size=30)
+    peaks, _ = find_peaks(filtered, height=20, distance=50)
+
     plt.figure()
     plt.subplot(1, 2, 1)
     plt.imshow(spectrogram, aspect='auto', extent=extent)
     plt.xlabel("Frequency [MHz]")
     plt.ylabel("Time [s]")
     plt.subplot(1, 2, 2)
-    plt.plot(np.linspace((sdr.center_freq + sdr.sample_rate/-2)/1e6, (sdr.center_freq + sdr.sample_rate/2)/1e6, fft_size), spectrogram[200, :])
+    x_for_plot = np.linspace(
+            (sdr.center_freq + sdr.sample_rate/-2)/1e6,
+            (sdr.center_freq + sdr.sample_rate/2)/1e6, fft_size)
+    plt.plot(
+        x_for_plot,
+        spectrogram[200, :],
+        x_for_plot,
+        filtered)
+    plt.plot(
+        x_for_plot[peaks],
+        filtered[peaks], "x", color="r")
     plt.xlabel("Frequency [MHz]")
     plt.ylabel("intensity")
     plt.show()

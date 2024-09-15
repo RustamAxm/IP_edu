@@ -78,5 +78,9 @@ User cancel, exiting...
 
 ```
 ## python sample
+```bash
+pip install poetry==1.2
+poetry install
+```
 [simple script](fft_show.py) 
 ![](fftimg.png)

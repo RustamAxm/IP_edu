@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "rtl-journal"
+version = "0.1.0"
+description = ""
+authors = ["Rustam Akhmadullin rustamaxm@gmail.com"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pyrtlsdr = "^0.3.0"
+scipy = "1.14.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
